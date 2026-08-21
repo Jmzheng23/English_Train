@@ -17,7 +17,7 @@
             overflow: hidden;
         }
 
-        /* ===== 顶部菜单栏 (类似Word/WPS) ===== */
+        /* ===== 顶部菜单栏 ===== */
         .app-header {
             background: #2c3e50;
             color: white;
@@ -71,7 +71,7 @@
             flex-wrap: wrap;
         }
 
-        /* ===== 标签页栏 (类似WPS) ===== */
+        /* ===== 标签页栏 ===== */
         .tab-bar {
             background: #e8ecf0;
             display: flex;
@@ -158,7 +158,7 @@
             overflow: hidden;
         }
 
-        /* ===== 侧边栏 (词书信息) ===== */
+        /* ===== 侧边栏 ===== */
         .sidebar-panel {
             width: 280px;
             min-width: 200px;
@@ -188,21 +188,6 @@
         }
         .sidebar-panel .info-row .label { color: #888; }
         .sidebar-panel .info-row .value { font-weight: 500; }
-
-        .sidebar-panel .tag-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin: 8px 0;
-        }
-        .sidebar-panel .tag {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            background: #e8ecf0;
-            color: #555;
-        }
 
         .sidebar-panel .word-count {
             font-size: 32px;
@@ -446,7 +431,7 @@
         .word-list-item .word-actions button:hover { background: #e8ecf0; color: #333; }
         .word-list-item .word-actions .del:hover { color: #e74c3c; }
 
-        /* ===== 滚动条美化 ===== */
+        /* ===== 滚动条 ===== */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f0f0f0; }
         ::-webkit-scrollbar-thumb { background: #c8cdd4; border-radius: 3px; }
@@ -464,20 +449,6 @@
             .app-header { padding: 6px 12px; }
             .practice-area { padding: 12px; }
         }
-
-        /* ===== 插件通道占位 ===== */
-        .plugin-slot {
-            border: 2px dashed #d5dae0;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            color: #aaa;
-            font-size: 13px;
-            margin-top: 12px;
-            background: #fafbfc;
-            transition: all 0.3s;
-        }
-        .plugin-slot:hover { border-color: #1a73e8; color: #1a73e8; }
 
         /* ===== 词书列表 ===== */
         .notebook-list {
@@ -522,6 +493,80 @@
             font-size: 12px;
         }
         .notebook-item .nb-actions button:hover { background: #e8ecf0; color: #333; }
+
+        /* ===== 模式选择标签 ===== */
+        .mode-tabs {
+            display: flex;
+            gap: 4px;
+            background: #e8ecf0;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+        .mode-tabs .mode-tab {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s;
+            background: transparent;
+            color: #666;
+            flex: 1;
+        }
+        .mode-tabs .mode-tab:hover { background: rgba(255,255,255,0.5); }
+        .mode-tabs .mode-tab.active {
+            background: white;
+            color: #1a73e8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* ===== 拼写统计 ===== */
+        .spell-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .spell-stats .stat-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .spell-stats .stat-item .num {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a73e8;
+        }
+        .spell-stats .stat-item .label {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .hint-level-btns {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .hint-level-btns .hint-btn {
+            padding: 4px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+            transition: all 0.2s;
+        }
+        .hint-level-btns .hint-btn:hover { background: #f0f0f0; }
+        .hint-level-btns .hint-btn.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
     </style>
 </head>
 <body>
@@ -542,7 +587,7 @@
     </div>
 </header>
 
-<!-- ===== 标签页栏 (词书标签) ===== -->
+<!-- ===== 标签页栏 ===== -->
 <div class="tab-bar" id="tabBar">
     <!-- 动态生成 -->
 </div>
@@ -573,38 +618,96 @@
 
     <!-- 练习区域 -->
     <div class="practice-area" id="practiceArea">
-        <!-- 菜单切换内容 -->
+        <!-- 练习菜单 -->
         <div id="menuPractice">
-            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-                <span style="font-size:13px;color:#888;" id="progressText">准备开始</span>
-                <div style="display:flex;gap:16px;font-size:14px;color:#555;">
-                    <span>✅ <span id="quickCorrect">0</span></span>
-                    <span>📝 <span id="quickTotal">0</span></span>
-                    <span>⭐ <span id="quickMarked">0</span></span>
+            <!-- 模式选择 -->
+            <div class="mode-tabs">
+                <button class="mode-tab active" data-mode="translate" onclick="switchPracticeMode('translate')">📝 翻译</button>
+                <button class="mode-tab" data-mode="spelling" onclick="switchPracticeMode('spelling')">✏️ 拼写</button>
+            </div>
+
+            <!-- 翻译模式 -->
+            <div id="translateMode">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+                    <span style="font-size:13px;color:#888;" id="progressText">准备开始</span>
+                    <div style="display:flex;gap:16px;font-size:14px;color:#555;">
+                        <span>✅ <span id="quickCorrect">0</span></span>
+                        <span>📝 <span id="quickTotal">0</span></span>
+                        <span>⭐ <span id="quickMarked">0</span></span>
+                    </div>
+                </div>
+
+                <div class="word-display">
+                    <div class="word" id="wordDisplay">请先创建或导入词书</div>
+                    <div class="hint" id="wordHint"></div>
+                    <div class="pair-info" id="pairInfo"></div>
+                </div>
+
+                <div class="word-actions" id="wordActions" style="display:none;">
+                    <button class="btn btn-ghost" id="starBtn" onclick="toggleStar()">⭐ 收藏</button>
+                    <button class="btn btn-ghost" id="easyBtn" onclick="toggleEasy()">😊 简单</button>
+                    <button class="btn btn-ghost" id="markBtn" onclick="toggleMarked()">🏷️ 标记</button>
+                    <button class="btn btn-ghost" onclick="speakWord()">🔊 朗读</button>
+                </div>
+
+                <div class="answer-area">
+                    <input type="text" id="translationInput" placeholder="请输入翻译结果..." onkeydown="if(event.key==='Enter') submitAnswer()">
+                    <button class="btn btn-primary" onclick="submitAnswer()">✅ 提交</button>
+                    <button class="btn btn-outline" onclick="nextWord()">➡️ 下一题</button>
+                </div>
+
+                <div class="result-box" id="resultBox">
+                    <span style="color:#888;">请在上方输入翻译</span>
                 </div>
             </div>
 
-            <div class="word-display">
-                <div class="word" id="wordDisplay">请先创建或导入词书</div>
-                <div class="hint" id="wordHint"></div>
-                <div class="pair-info" id="pairInfo"></div>
-            </div>
+            <!-- 拼写模式 -->
+            <div id="spellingMode" style="display:none;">
+                <div class="spell-stats" id="spellStats">
+                    <div class="stat-item"><div class="num" id="spellCorrect">0</div><div class="label">✅ 正确</div></div>
+                    <div class="stat-item"><div class="num" id="spellTotal">0</div><div class="label">📝 总题</div></div>
+                    <div class="stat-item"><div class="num" id="spellStreak" style="color:#f39c12;">0</div><div class="label">🔥 连击</div></div>
+                    <div class="stat-item"><div class="num" id="spellBest" style="color:#8e44ad;">0</div><div class="label">🏆 最佳</div></div>
+                    <div class="stat-item"><div class="num" id="spellAccuracy" style="color:#27ae60;">0%</div><div class="label">📊 正确率</div></div>
+                </div>
 
-            <div class="word-actions" id="wordActions" style="display:none;">
-                <button class="btn btn-ghost" id="starBtn" onclick="toggleStar()">⭐ 收藏</button>
-                <button class="btn btn-ghost" id="easyBtn" onclick="toggleEasy()">😊 简单</button>
-                <button class="btn btn-ghost" id="markBtn" onclick="toggleMarked()">🏷️ 标记</button>
-                <button class="btn btn-ghost" onclick="speakWord()">🔊 朗读</button>
-            </div>
+                <div class="word-display">
+                    <div class="word" id="spellDisplay">🎯 准备开始</div>
+                    <div class="hint" id="spellHint">点击"开始训练"按钮</div>
+                    <div class="pair-info" id="spellPairInfo"></div>
+                </div>
 
-            <div class="answer-area">
-                <input type="text" id="translationInput" placeholder="请输入翻译结果..." onkeydown="if(event.key==='Enter') submitAnswer()">
-                <button class="btn btn-primary" onclick="submitAnswer()">✅ 提交</button>
-                <button class="btn btn-outline" onclick="nextWord()">➡️ 下一题</button>
-            </div>
+                <div class="word-actions">
+                    <button class="btn btn-primary" id="spellToggleBtn" onclick="toggleSpelling()">▶ 开始训练</button>
+                    <button class="btn btn-ghost" onclick="speakSpellWord()">🔊 听音</button>
+                    <button class="btn btn-ghost" onclick="resetSpelling()">🔄 重置</button>
+                </div>
 
-            <div class="result-box" id="resultBox">
-                <span style="color:#888;">请在上方输入翻译</span>
+                <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                    <span style="font-size:13px;color:#666;">提示等级:</span>
+                    <div class="hint-level-btns">
+                        <button class="hint-btn active" data-level="0" onclick="setHintLevel(0)">无</button>
+                        <button class="hint-btn" data-level="1" onclick="setHintLevel(1)">首字母</button>
+                        <button class="hint-btn" data-level="2" onclick="setHintLevel(2)">字母数</button>
+                        <button class="hint-btn" data-level="3" onclick="setHintLevel(3)">部分显示</button>
+                    </div>
+                    <span style="font-size:12px;color:#888;margin-left:auto;" id="spellHintLevel">当前: 无</span>
+                </div>
+
+                <div class="answer-area">
+                    <input type="text" id="spellInput" placeholder="输入拼写..." onkeydown="if(event.key==='Enter') checkSpelling()">
+                    <button class="btn btn-primary" onclick="checkSpelling()">✅ 检查</button>
+                    <button class="btn btn-outline" onclick="nextSpelling()">➡️ 下一题</button>
+                </div>
+
+                <div class="result-box" id="spellResultBox">
+                    <span style="color:#888;">准备开始拼写训练</span>
+                </div>
+
+                <div id="spellMistakes" style="margin-top:12px;display:none;">
+                    <h4 style="font-size:14px;color:#e74c3c;">❌ 错误记录</h4>
+                    <div id="spellMistakesList" style="max-height:100px;overflow-y:auto;font-size:13px;color:#555;"></div>
+                </div>
             </div>
         </div>
 
@@ -625,7 +728,7 @@
         <!-- 导入 -->
         <div id="menuImport" style="display:none;">
             <h3 style="margin-bottom:16px;">📤 导入单词</h3>
-            <div class="modal" style="box-shadow:none;padding:0;max-width:100%;">
+            <div style="background:white;border-radius:12px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
                 <div class="form-group">
                     <label>📋 粘贴单词列表</label>
                     <textarea id="importTextArea" placeholder="每行一个单词，格式：英文 中文&#10;例如：&#10;apple 苹果&#10;book 书" style="min-height:200px;"></textarea>
@@ -645,17 +748,10 @@
         <!-- 插件 -->
         <div id="menuPlugins" style="display:none;">
             <h3 style="margin-bottom:16px;">🔌 插件通道</h3>
-            <p style="color:#888;margin-bottom:12px;">在此扩展自定义功能，插件脚本将在此区域加载。</p>
-            <div class="plugin-slot" id="pluginSlot">
-                <div style="font-size:32px;margin-bottom:8px;">🧩</div>
-                <div>插件加载区域</div>
-                <div style="font-size:12px;color:#bbb;margin-top:4px;">后续可在此注入自定义JavaScript模块</div>
+            <p style="color:#888;margin-bottom:12px;">已加载的插件将以标签页形式显示</p>
+            <div id="pluginContainer">
+                <!-- 插件动态加载 -->
             </div>
-            <div style="margin-top:16px;">
-                <button class="btn btn-primary btn-sm" onclick="loadPlugin()">加载示例插件</button>
-                <button class="btn btn-danger btn-sm" onclick="clearPlugin()">清除插件</button>
-            </div>
-            <div id="pluginOutput" style="margin-top:12px;padding:12px;background:#f7f9fc;border-radius:6px;display:none;"></div>
         </div>
     </div>
 </div>
@@ -678,11 +774,11 @@
 const STORAGE_KEY = 'english_train_data';
 
 let appData = {
-    notebooks: [],      // [{id, name, tags, color, words: [{english, chinese, star, easy, marked}], createdAt}]
+    notebooks: [],
     currentNotebookId: null,
     currentIndex: 0,
     usedWords: [],
-    history: [],        // [{notebookId, mode, question, userAnswer, correctAnswer, result, time}]
+    history: [],
     correctCount: 0,
     totalCount: 0,
     mode: 'en_to_cn',
@@ -691,9 +787,22 @@ let appData = {
     isPracticeMarked: false,
     practicedMarkedIndices: [],
     nextId: 1,
+    // 拼写模式状态
+    spellState: {
+        active: false,
+        totalCount: 0,
+        correctCount: 0,
+        streak: 0,
+        bestStreak: 0,
+        mistakes: [],
+        history: [],
+        hintLevel: 0,
+        currentWord: null,
+        words: [],
+        wordIndex: 0,
+    }
 };
 
-// 预设颜色
 const COLORS = ['#1a73e8', '#27ae60', '#e74c3c', '#f39c12', '#8e44ad', '#00bcd4', '#ff6f00', '#7cb342', '#e91e63', '#3f51b5'];
 
 // ============================================================
@@ -711,7 +820,6 @@ const quickTotal = $('quickTotal');
 const quickMarked = $('quickMarked');
 const progressText = $('progressText');
 const tabBar = $('tabBar');
-const sidebarContent = $('sidebarContent');
 const wordListContainer = $('wordListContainer');
 const notebookList = $('notebookList');
 const toast = $('toast');
@@ -733,9 +841,7 @@ function loadData() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return false;
         const data = JSON.parse(raw);
-        // 合并默认值
         appData = { ...appData, ...data };
-        // 确保每个词书有words数组
         appData.notebooks.forEach(nb => {
             if (!nb.words) nb.words = [];
             if (!nb.tags) nb.tags = [];
@@ -787,9 +893,19 @@ function setCurrentNotebook(id) {
     appData.usedWords = [];
     appData.isPracticeMarked = false;
     appData.practicedMarkedIndices = [];
+    // 重置拼写状态
+    appData.spellState.active = false;
+    appData.spellState.totalCount = 0;
+    appData.spellState.correctCount = 0;
+    appData.spellState.streak = 0;
+    appData.spellState.mistakes = [];
+    appData.spellState.history = [];
+    appData.spellState.words = [];
+    appData.spellState.wordIndex = 0;
     saveData();
     renderAll();
     initWord();
+    updateSpellStats();
 }
 
 function deleteNotebook(id) {
@@ -820,7 +936,7 @@ function getMarkedWords() {
 }
 
 // ============================================================
-// 核心练习逻辑
+// 核心练习逻辑 (翻译模式)
 // ============================================================
 
 function getCurrentWord() {
@@ -1081,14 +1197,6 @@ function handleFileUpload(event) {
 }
 
 function showImportModal(words) {
-    const nbSelect = document.getElementById('importTargetNotebook');
-    nbSelect.innerHTML = '<option value="new">新建词书</option>';
-    appData.notebooks.forEach(nb => {
-        nbSelect.innerHTML += `<option value="${nb.id}">${nb.name} (${nb.words.length}词)</option>`;
-    });
-    // 填充预览
-    const preview = words.slice(0, 20).map(w => `${w.english} - ${w.chinese}`).join('\n');
-    document.getElementById('importTextArea').value = preview + (words.length > 20 ? `\n... 共 ${words.length} 个单词` : '');
     showModal('📥 导入确认', `
         <p>即将导入 <strong>${words.length}</strong> 个单词</p>
         <div class="form-group">
@@ -1104,21 +1212,25 @@ function showImportModal(words) {
         </div>
         <div class="btn-row">
             <button class="btn btn-outline" onclick="closeModal()">取消</button>
-            <button class="btn btn-success" onclick="confirmImport(${JSON.stringify(words).replace(/"/g,'&quot;')})">确认导入</button>
+            <button class="btn btn-success" onclick="confirmImport()">确认导入</button>
         </div>
     `);
-    // 监听选择变化
     document.getElementById('importTargetNotebook2').onchange = function() {
         document.getElementById('importNewNameGroup2').style.display = this.value === 'new' ? 'block' : 'none';
     };
 }
 
-function confirmImport(words) {
+function confirmImport() {
+    const text = document.getElementById('importTextArea').value;
+    if (!text.trim()) { showToast('请输入单词列表', 'warning'); return; }
+    const words = parseVocabulary(text);
+    if (words.length === 0) { showToast('未能解析出有效单词', 'error'); return; }
     const targetId = document.getElementById('importTargetNotebook2').value;
     let nb;
     if (targetId === 'new') {
         const name = document.getElementById('importNewName2').value.trim() || `词书 ${appData.notebooks.length + 1}`;
         nb = createNotebook(name, [], COLORS[appData.notebooks.length % COLORS.length], words);
+        appData.currentNotebookId = nb.id;
     } else {
         nb = getNotebook(parseInt(targetId));
         if (nb) {
@@ -1127,14 +1239,66 @@ function confirmImport(words) {
         }
     }
     closeModal();
-    if (nb) {
+    appData.currentIndex = 0;
+    appData.usedWords = [];
+    showToast(`成功导入 ${words.length} 个单词${nb ? '到 "' + nb.name + '"' : ''}`, 'success');
+    renderAll();
+    initWord();
+    switchMenu('practice');
+}
+
+function showImportTextModal() {
+    showModal('📋 粘贴导入', `
+        <div class="form-group">
+            <label>📋 粘贴单词列表</label>
+            <textarea id="importTextArea3" placeholder="每行一个单词，格式：英文 中文&#10;例如：&#10;apple 苹果&#10;book 书" style="min-height:200px;"></textarea>
+        </div>
+        <div class="form-group">
+            <label>目标词书</label>
+            <select id="importTargetNotebook3">
+                <option value="new">新建词书</option>
+                ${appData.notebooks.map(nb => `<option value="${nb.id}">${nb.name} (${nb.words.length}词)</option>`).join('')}
+            </select>
+        </div>
+        <div class="form-group" id="importNewNameGroup3">
+            <label>新词书名称</label>
+            <input type="text" id="importNewName3" placeholder="输入词书名称">
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-outline" onclick="closeModal()">取消</button>
+            <button class="btn btn-success" onclick="confirmImportText()">确认导入</button>
+        </div>
+    `);
+    document.getElementById('importTargetNotebook3').onchange = function() {
+        document.getElementById('importNewNameGroup3').style.display = this.value === 'new' ? 'block' : 'none';
+    };
+}
+
+function confirmImportText() {
+    const text = document.getElementById('importTextArea3').value;
+    if (!text.trim()) { showToast('请输入单词列表', 'warning'); return; }
+    const words = parseVocabulary(text);
+    if (words.length === 0) { showToast('未能解析出有效单词', 'error'); return; }
+    const targetId = document.getElementById('importTargetNotebook3').value;
+    let nb;
+    if (targetId === 'new') {
+        const name = document.getElementById('importNewName3').value.trim() || `词书 ${appData.notebooks.length + 1}`;
+        nb = createNotebook(name, [], COLORS[appData.notebooks.length % COLORS.length], words);
         appData.currentNotebookId = nb.id;
-        appData.currentIndex = 0;
-        appData.usedWords = [];
-        showToast(`成功导入 ${words.length} 个单词到 "${nb.name}"`, 'success');
-        renderAll();
-        initWord();
+    } else {
+        nb = getNotebook(parseInt(targetId));
+        if (nb) {
+            words.forEach(w => nb.words.push({ ...w, star: false, easy: false, marked: false }));
+            saveData();
+        }
     }
+    closeModal();
+    appData.currentIndex = 0;
+    appData.usedWords = [];
+    showToast(`成功导入 ${words.length} 个单词${nb ? '到 "' + nb.name + '"' : ''}`, 'success');
+    renderAll();
+    initWord();
+    switchMenu('practice');
 }
 
 function importFromText() {
@@ -1230,7 +1394,6 @@ function renderSidebar() {
     const practiced = appData.history.filter(h => h.notebookId === nb.id).length;
     document.getElementById('nbPracticed').textContent = practiced;
 
-    // 单词列表
     if (nb.words.length === 0) {
         wordListContainer.innerHTML = '<div style="color:#888;padding:12px;text-align:center;">暂无单词</div>';
         return;
@@ -1288,7 +1451,6 @@ function showCreateNotebookModal() {
             <button class="btn btn-success" onclick="confirmCreateNotebook()">创建</button>
         </div>
     `);
-    // 默认选中第一个颜色
     const firstDot = document.querySelector('#colorOptions .color-dot');
     if (firstDot) firstDot.classList.add('active');
 }
@@ -1311,39 +1473,45 @@ function confirmCreateNotebook() {
     showToast(`已创建词书: ${name}`, 'success');
 }
 
-function editCurrentNotebook() {
-    const nb = getCurrentNotebook();
-    if (!nb) { showToast('请先选择词书', 'warning'); return; }
+function editNotebook(id) {
+    const nb = getNotebook(id);
+    if (!nb) return;
     showModal('✏️ 编辑词书', `
         <div class="form-group">
             <label>词书名称</label>
-            <input type="text" id="editNbName" value="${nb.name}">
+            <input type="text" id="editNbName2" value="${nb.name}">
         </div>
         <div class="form-group">
             <label>标签（用逗号分隔）</label>
-            <input type="text" id="editNbTags" value="${nb.tags.join(', ')}">
+            <input type="text" id="editNbTags2" value="${nb.tags.join(', ')}">
         </div>
         <div class="form-group">
             <label>颜色</label>
-            <div class="color-options" id="colorOptions">
+            <div class="color-options" id="colorOptions2">
                 ${COLORS.map(c => `<span class="color-dot ${nb.color === c ? 'active' : ''}" style="background:${c}" data-color="${c}" onclick="selectColor(this)"></span>`).join('')}
             </div>
         </div>
         <div class="btn-row">
             <button class="btn btn-outline" onclick="closeModal()">取消</button>
-            <button class="btn btn-success" onclick="confirmEditNotebook(${nb.id})">保存</button>
+            <button class="btn btn-success" onclick="confirmEditNotebook(${id})">保存</button>
         </div>
     `);
 }
 
 function confirmEditNotebook(id) {
-    const name = document.getElementById('editNbName').value.trim();
-    const tags = document.getElementById('editNbTags').value.split(',').map(s => s.trim()).filter(s => s);
-    const colorEl = document.querySelector('#colorOptions .color-dot.active');
+    const name = document.getElementById('editNbName2').value.trim();
+    const tags = document.getElementById('editNbTags2').value.split(',').map(s => s.trim()).filter(s => s);
+    const colorEl = document.querySelector('#colorOptions2 .color-dot.active');
     const color = colorEl ? colorEl.dataset.color : COLORS[0];
     updateNotebook(id, { name, tags, color });
     closeModal();
     showToast('已更新词书', 'success');
+}
+
+function editCurrentNotebook() {
+    const nb = getCurrentNotebook();
+    if (!nb) { showToast('请先选择词书', 'warning'); return; }
+    editNotebook(nb.id);
 }
 
 function deleteCurrentNotebook() {
@@ -1390,7 +1558,6 @@ function confirmMerge() {
     nbs.forEach(nb => { allWords = allWords.concat(nb.words); });
     const color = nbs[0]?.color || COLORS[0];
     const newNb = createNotebook(targetName, [], color, allWords);
-    // 删除原词书
     ids.forEach(id => deleteNotebook(id));
     appData.currentNotebookId = newNb.id;
     closeModal();
@@ -1443,70 +1610,303 @@ function switchMenu(menu) {
             document.getElementById('importNewNameGroup').style.display = this.value === 'new' ? 'block' : 'none';
         };
     }
+    if (menu === 'plugins') {
+        renderPlugins();
+    }
 }
 
 // ============================================================
-// 插件系统
+// 练习模式切换 (翻译/拼写)
 // ============================================================
 
-let pluginLoaded = false;
+function switchPracticeMode(mode) {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.mode-tab[data-mode="${mode}"]`).classList.add('active');
+    document.getElementById('translateMode').style.display = mode === 'translate' ? 'block' : 'none';
+    document.getElementById('spellingMode').style.display = mode === 'spelling' ? 'block' : 'none';
+    if (mode === 'spelling') {
+        initSpelling();
+    }
+}
 
-function loadPlugin() {
-    const slot = document.getElementById('pluginSlot');
-    const output = document.getElementById('pluginOutput');
-    if (pluginLoaded) {
-        output.style.display = 'block';
-        output.innerHTML = '✅ 插件已加载';
+// ============================================================
+// 拼写模式
+// ============================================================
+
+function initSpelling() {
+    const words = getWords();
+    if (words.length === 0) {
+        document.getElementById('spellDisplay').textContent = '📭 没有单词';
+        document.getElementById('spellHint').textContent = '请先导入词书';
         return;
     }
-    // 模拟加载插件
-    slot.innerHTML = `
-        <div style="font-size:32px;margin-bottom:8px;">🧩</div>
-        <div style="color:#1a73e8;font-weight:500;">📚 单词统计插件 v1.0</div>
-        <div style="font-size:12px;color:#666;margin-top:4px;">当前词书: ${getCurrentNotebook()?.name || '无'} | 单词数: ${getWords().length}</div>
-        <div style="font-size:12px;color:#888;margin-top:8px;">✅ 插件加载成功！</div>
-        <button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="runPlugin()">运行插件功能</button>
-    `;
-    pluginLoaded = true;
-    output.style.display = 'block';
-    output.innerHTML = '✅ 插件已加载 - 单词统计功能可用';
-    showToast('插件加载成功！', 'success');
+    // 优先使用收藏/标记的单词
+    const marked = words.filter(w => w.star || w.marked);
+    appData.spellState.words = marked.length > 0 ? marked.slice() : words.slice();
+    shuffleArray(appData.spellState.words);
+    appData.spellState.wordIndex = 0;
+    appData.spellState.active = false;
+    appData.spellState.totalCount = 0;
+    appData.spellState.correctCount = 0;
+    appData.spellState.streak = 0;
+    appData.spellState.mistakes = [];
+    appData.spellState.history = [];
+    document.getElementById('spellToggleBtn').textContent = '▶ 开始训练';
+    document.getElementById('spellInput').disabled = true;
+    document.getElementById('spellDisplay').textContent = '🎯 准备开始';
+    document.getElementById('spellHint').textContent = `共 ${appData.spellState.words.length} 个单词，点击"开始训练"`;
+    document.getElementById('spellPairInfo').textContent = '';
+    document.getElementById('spellResultBox').innerHTML = '<span style="color:#888;">准备开始拼写训练</span>';
+    document.getElementById('spellMistakes').style.display = 'none';
+    updateSpellStats();
 }
 
-function runPlugin() {
-    const nb = getCurrentNotebook();
-    if (!nb) { showToast('请选择词书', 'warning'); return; }
-    const words = nb.words;
-    const starred = words.filter(w => w.star).length;
-    const easy = words.filter(w => w.easy).length;
-    const marked = words.filter(w => w.marked).length;
-    const output = document.getElementById('pluginOutput');
-    output.innerHTML = `
-        <h4>📊 词书统计</h4>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:8px;">
-            <div style="background:white;padding:12px;border-radius:6px;text-align:center;"><strong>${words.length}</strong><br>总单词</div>
-            <div style="background:#fefcbf;padding:12px;border-radius:6px;text-align:center;"><strong>${starred}</strong><br>⭐ 收藏</div>
-            <div style="background:#c6f6d5;padding:12px;border-radius:6px;text-align:center;"><strong>${easy}</strong><br>😊 简单</div>
-            <div style="background:#e9d8fd;padding:12px;border-radius:6px;text-align:center;"><strong>${marked}</strong><br>🏷️ 标记</div>
+function toggleSpelling() {
+    if (!appData.spellState.active) {
+        startSpelling();
+    } else {
+        stopSpelling();
+    }
+}
+
+function startSpelling() {
+    if (appData.spellState.words.length === 0) {
+        showToast('没有可用的单词', 'warning');
+        return;
+    }
+    appData.spellState.active = true;
+    appData.spellState.totalCount = 0;
+    appData.spellState.correctCount = 0;
+    appData.spellState.streak = 0;
+    appData.spellState.mistakes = [];
+    appData.spellState.history = [];
+    appData.spellState.wordIndex = 0;
+    shuffleArray(appData.spellState.words);
+    document.getElementById('spellToggleBtn').textContent = '⏹ 停止训练';
+    document.getElementById('spellInput').disabled = false;
+    document.getElementById('spellInput').focus();
+    document.getElementById('spellMistakes').style.display = 'none';
+    showToast('🎯 拼写训练开始！', 'success');
+    nextSpelling();
+    updateSpellStats();
+}
+
+function stopSpelling() {
+    appData.spellState.active = false;
+    document.getElementById('spellToggleBtn').textContent = '▶ 开始训练';
+    document.getElementById('spellInput').disabled = true;
+    document.getElementById('spellDisplay').textContent = '⏸ 已暂停';
+    document.getElementById('spellHint').textContent = '点击"开始训练"继续';
+    showToast('已暂停训练', 'info');
+}
+
+function nextSpelling() {
+    if (!appData.spellState.active) {
+        return;
+    }
+    const words = appData.spellState.words;
+    if (words.length === 0) {
+        document.getElementById('spellDisplay').textContent = '📭 没有单词';
+        return;
+    }
+    // 如果所有单词都练完了，重新开始
+    if (appData.spellState.wordIndex >= words.length) {
+        shuffleArray(words);
+        appData.spellState.wordIndex = 0;
+        showToast('🔄 所有单词已完成，重新开始！', 'info');
+    }
+    const word = words[appData.spellState.wordIndex];
+    appData.spellState.currentWord = word;
+    const isEnToCn = appData.mode === 'en_to_cn';
+    const displayText = isEnToCn ? `📝 ${word.chinese}` : `🔤 ${word.english}`;
+    const hintText = isEnToCn ? '请拼写对应的英文单词' : '请拼写对应的中文（拼音）';
+    const hint = getSpellHint(word, isEnToCn);
+    document.getElementById('spellDisplay').textContent = displayText;
+    document.getElementById('spellHint').textContent = hintText + (hint ? ` | 提示: ${hint}` : '');
+    document.getElementById('spellPairInfo').textContent = `📖 ${word.english} - ${word.chinese}`;
+    document.getElementById('spellInput').value = '';
+    document.getElementById('spellInput').focus();
+    document.getElementById('spellResultBox').innerHTML = '<span style="color:#888;">输入拼写...</span>';
+    // 自动朗读
+    setTimeout(() => speakSpellWord(), 500);
+    updateSpellStats();
+}
+
+function getSpellHint(word, isEnToCn) {
+    const level = appData.spellState.hintLevel;
+    const target = isEnToCn ? word.english : word.chinese;
+    switch(level) {
+        case 1: return `首字母: ${target.charAt(0)}`;
+        case 2: return `共 ${target.length} 个字符`;
+        case 3: {
+            const half = Math.floor(target.length / 2);
+            return `部分: ${target.substring(0, half)}___`;
+        }
+        default: return '';
+    }
+}
+
+function setHintLevel(level) {
+    appData.spellState.hintLevel = level;
+    document.querySelectorAll('.hint-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.level) === level);
+    });
+    document.getElementById('spellHintLevel').textContent = `当前: ${['无','首字母','字母数','部分显示'][level]}`;
+    if (appData.spellState.currentWord) {
+        const word = appData.spellState.currentWord;
+        const isEnToCn = appData.mode === 'en_to_cn';
+        const hint = getSpellHint(word, isEnToCn);
+        const hintText = isEnToCn ? '请拼写对应的英文单词' : '请拼写对应的中文（拼音）';
+        document.getElementById('spellHint').textContent = hintText + (hint ? ` | 提示: ${hint}` : '');
+    }
+}
+
+function checkSpelling() {
+    if (!appData.spellState.active) {
+        showToast('请先开始训练', 'warning');
+        return;
+    }
+    const word = appData.spellState.currentWord;
+    if (!word) {
+        showToast('没有当前单词', 'warning');
+        return;
+    }
+    const input = document.getElementById('spellInput');
+    const userAnswer = input.value.trim();
+    if (!userAnswer) {
+        showToast('请输入拼写', 'warning');
+        return;
+    }
+    const isEnToCn = appData.mode === 'en_to_cn';
+    const correct = isEnToCn ? word.english : word.chinese;
+    const isCorrect = compareSpelling(userAnswer, correct);
+
+    appData.spellState.totalCount++;
+    const resultBox = document.getElementById('spellResultBox');
+    if (isCorrect) {
+        appData.spellState.correctCount++;
+        appData.spellState.streak++;
+        if (appData.spellState.streak > appData.spellState.bestStreak) {
+            appData.spellState.bestStreak = appData.spellState.streak;
+        }
+        resultBox.innerHTML = `
+            <span style="color:#27ae60;font-weight:600;">✅ 正确！ 继续加油！</span>
+            <span style="color:#888;font-size:13px;margin-left:12px;">🔥 连击 ${appData.spellState.streak}</span>
+        `;
+        appData.spellState.wordIndex++;
+        setTimeout(() => nextSpelling(), 600);
+    } else {
+        appData.spellState.streak = 0;
+        appData.spellState.mistakes.push({
+            word: word,
+            userAnswer: userAnswer,
+            correct: correct,
+            time: new Date().toLocaleTimeString(),
+        });
+        resultBox.innerHTML = `
+            <span style="color:#e74c3c;font-weight:600;">❌ 拼写错误</span>
+            <div style="margin-top:4px;color:#555;">
+                你的答案: <span style="color:#e74c3c;">${userAnswer}</span>
+                <br>正确答案: <span style="color:#27ae60;font-weight:600;">${correct}</span>
+            </div>
+        `;
+        renderSpellMistakes();
+        input.value = '';
+        input.focus();
+        appData.spellState.wordIndex++;
+    }
+    updateSpellStats();
+}
+
+function compareSpelling(user, correct) {
+    const normalize = s => s.trim().toLowerCase().replace(/[^a-z\u4e00-\u9fff]/g, '');
+    const un = normalize(user);
+    const cn = normalize(correct);
+    if (un === cn) return true;
+    if (appData.mode === 'cn_to_en') {
+        const userWords = un.split(/\s+/);
+        const correctWords = cn.split(/\s+/);
+        const matched = userWords.filter(w => correctWords.some(cw => cw.includes(w) || w.includes(cw)));
+        if (matched.length >= Math.min(userWords.length, correctWords.length) * 0.6) return true;
+    }
+    if (appData.mode === 'en_to_cn') {
+        if (un.length > 0 && cn.length > 0) {
+            const common = un.split('').filter(c => cn.includes(c));
+            if (common.length / Math.max(un.length, cn.length) > 0.5) return true;
+        }
+    }
+    return false;
+}
+
+function speakSpellWord() {
+    const word = appData.spellState.currentWord;
+    if (!word) { showToast('没有当前单词', 'warning'); return; }
+    const isEnToCn = appData.mode === 'en_to_cn';
+    const text = isEnToCn ? word.english : word.chinese;
+    if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = isEnToCn ? 'en-US' : 'zh-CN';
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        const voices = window.speechSynthesis.getVoices();
+        const voice = voices.find(v => v.lang.startsWith(isEnToCn ? 'en' : 'zh'));
+        if (voice) utterance.voice = voice;
+        window.speechSynthesis.speak(utterance);
+    } else {
+        showToast('浏览器不支持语音合成', 'error');
+    }
+}
+
+function resetSpelling() {
+    if (appData.spellState.active) {
+        if (!confirm('确定要重置当前训练进度吗？')) return;
+    }
+    appData.spellState.totalCount = 0;
+    appData.spellState.correctCount = 0;
+    appData.spellState.streak = 0;
+    appData.spellState.mistakes = [];
+    appData.spellState.history = [];
+    appData.spellState.wordIndex = 0;
+    shuffleArray(appData.spellState.words);
+    updateSpellStats();
+    renderSpellMistakes();
+    document.getElementById('spellResultBox').innerHTML = '<span style="color:#888;">已重置</span>';
+    document.getElementById('spellDisplay').textContent = '🔄 已重置';
+    document.getElementById('spellHint').textContent = '点击"开始训练"重新开始';
+    showToast('已重置统计数据', 'info');
+}
+
+function updateSpellStats() {
+    const total = appData.spellState.totalCount;
+    const correct = appData.spellState.correctCount;
+    const accuracy = total > 0 ? Math.round(correct / total * 100) : 0;
+    document.getElementById('spellCorrect').textContent = correct;
+    document.getElementById('spellTotal').textContent = total;
+    document.getElementById('spellStreak').textContent = appData.spellState.streak;
+    document.getElementById('spellBest').textContent = appData.spellState.bestStreak;
+    document.getElementById('spellAccuracy').textContent = total > 0 ? accuracy + '%' : '0%';
+}
+
+function renderSpellMistakes() {
+    const container = document.getElementById('spellMistakes');
+    const list = document.getElementById('spellMistakesList');
+    if (appData.spellState.mistakes.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+    container.style.display = 'block';
+    list.innerHTML = appData.spellState.mistakes.slice(-10).reverse().map(m => `
+        <div style="padding:4px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;">
+            <span>${m.word.english} → ${m.correct}</span>
+            <span style="color:#e74c3c;">✗ ${m.userAnswer}</span>
+            <span style="color:#888;font-size:12px;">${m.time}</span>
         </div>
-    `;
-    output.style.display = 'block';
+    `).join('');
 }
-
-function clearPlugin() {
-    document.getElementById('pluginSlot').innerHTML = `
-        <div style="font-size:32px;margin-bottom:8px;">🧩</div>
-        <div>插件加载区域</div>
-        <div style="font-size:12px;color:#bbb;margin-top:4px;">后续可在此注入自定义JavaScript模块</div>
-    `;
-    document.getElementById('pluginOutput').style.display = 'none';
-    pluginLoaded = false;
-    showToast('已清除插件', 'info');
-}
-
 
 // ============================================================
-// 朗读
+// 朗读 (翻译模式)
 // ============================================================
 
 function speakWord() {
@@ -1525,6 +1925,110 @@ function speakWord() {
     } else {
         showToast('浏览器不支持语音合成', 'error');
     }
+}
+
+// ============================================================
+// 工具函数
+// ============================================================
+
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+// ============================================================
+// 插件系统
+// ============================================================
+
+let loadedPlugins = [];
+
+function renderPlugins() {
+    const container = document.getElementById('pluginContainer');
+    if (loadedPlugins.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center;padding:40px;color:#888;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                <div style="font-size:48px;margin-bottom:12px;">🧩</div>
+                <div>暂无插件加载</div>
+                <div style="font-size:13px;color:#bbb;margin-top:4px;">点击下方按钮加载示例插件</div>
+                <button class="btn btn-primary" style="margin-top:16px;" onclick="loadSamplePlugin()">加载示例插件</button>
+            </div>
+        `;
+        return;
+    }
+    let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
+    loadedPlugins.forEach((plugin, index) => {
+        html += `
+            <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                    <div>
+                        <h4 style="color:#1a1a2e;">${plugin.icon || '🧩'} ${plugin.name}</h4>
+                        <span style="font-size:13px;color:#888;">${plugin.description || '插件'}</span>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary" onclick="runPlugin(${index})">▶ 运行</button>
+                        <button class="btn btn-sm btn-danger" onclick="unloadPlugin(${index})">✕</button>
+                    </div>
+                </div>
+                <div id="pluginOutput_${index}" style="margin-top:12px;display:none;padding:12px;background:#f7f9fc;border-radius:6px;"></div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function loadSamplePlugin() {
+    const plugin = {
+        name: '📊 单词统计',
+        description: '显示当前词书的详细统计信息',
+        icon: '📊',
+        run: function() {
+            const nb = getCurrentNotebook();
+            if (!nb) { showToast('请选择词书', 'warning'); return; }
+            const words = nb.words;
+            const starred = words.filter(w => w.star).length;
+            const easy = words.filter(w => w.easy).length;
+            const marked = words.filter(w => w.marked).length;
+            const practiced = appData.history.filter(h => h.notebookId === nb.id).length;
+            return `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;">
+                    <div style="background:white;padding:12px;border-radius:6px;text-align:center;"><strong>${words.length}</strong><br>总单词</div>
+                    <div style="background:#fefcbf;padding:12px;border-radius:6px;text-align:center;"><strong>${starred}</strong><br>⭐ 收藏</div>
+                    <div style="background:#c6f6d5;padding:12px;border-radius:6px;text-align:center;"><strong>${easy}</strong><br>😊 简单</div>
+                    <div style="background:#e9d8fd;padding:12px;border-radius:6px;text-align:center;"><strong>${marked}</strong><br>🏷️ 标记</div>
+                    <div style="background:#bee3f8;padding:12px;border-radius:6px;text-align:center;"><strong>${practiced}</strong><br>已练习</div>
+                </div>
+            `;
+        }
+    };
+    loadedPlugins.push(plugin);
+    renderPlugins();
+    showToast('✅ 插件已加载: ' + plugin.name, 'success');
+}
+
+function runPlugin(index) {
+    const plugin = loadedPlugins[index];
+    if (!plugin) return;
+    const output = document.getElementById('pluginOutput_' + index);
+    if (!output) return;
+    try {
+        const result = plugin.run();
+        output.innerHTML = result;
+        output.style.display = 'block';
+    } catch(e) {
+        output.innerHTML = `<span style="color:#e74c3c;">❌ 插件运行错误: ${e.message}</span>`;
+        output.style.display = 'block';
+    }
+}
+
+function unloadPlugin(index) {
+    if (!confirm('确定要卸载这个插件吗？')) return;
+    loadedPlugins.splice(index, 1);
+    renderPlugins();
+    showToast('已卸载插件', 'info');
 }
 
 // ============================================================
@@ -1591,7 +2095,6 @@ function renderAll() {
     renderTabs();
     renderSidebar();
     renderNotebookList();
-    // 更新统计
     const words = getWords();
     const marked = words.filter(w => w.star || w.marked).length;
     quickCorrect.textContent = appData.correctCount;
@@ -1601,6 +2104,7 @@ function renderAll() {
     const progress = total > 0 ? Math.min(100, Math.round((appData.totalCount % total) / total * 100)) : 0;
     document.querySelector('.progress-bar .fill')?.style.setProperty('width', progress + '%');
     progressText.textContent = total > 0 ? `进度: ${appData.totalCount % total + 1}/${total}` : '准备开始';
+    updateSpellStats();
 }
 
 function updateProgress() {
@@ -1618,7 +2122,6 @@ function updateProgress() {
 
 function init() {
     loadData();
-    // 如果没有词书，创建示例
     if (appData.notebooks.length === 0) {
         const sampleWords = [
             { english: 'apple', chinese: '苹果' },
@@ -1640,12 +2143,8 @@ function init() {
     }
     renderAll();
     initWord();
-    // 默认显示练习菜单
+    initSpelling();
     switchMenu('practice');
-    // 添加进度条到侧边栏
-    const sidebar = document.getElementById('sidebarContent');
-    const progressHtml = `<div class="progress-bar"><div class="fill" style="width:0%"></div></div>`;
-    // 在合适位置插入
     const wc = document.getElementById('nbWordCount');
     if (wc) {
         const div = document.createElement('div');
@@ -1656,9 +2155,7 @@ function init() {
     showToast('欢迎使用英语学习系统！📚', 'info');
 }
 
-// 启动
 document.addEventListener('DOMContentLoaded', init);
 </script>
-    <script src="spelling-plugin.js"></script>
 </body>
 </html>
